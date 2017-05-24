@@ -119,17 +119,26 @@ def m4(c=[0,1,2,3,4,5,6,7,8,9]):
 
 
 @app.route("/eur", methods = ['GET', 'POST'])
-def eur(c=[0,1,2,3,4,5,6,7,8,9]):
+def eur(c=[0,1,2,3,4,5,6,7,8,9],nb=10):
+    #nb specifies the repetion number of 11's
+    query = request.args.get("nb")
+    if query:
+        nb = int(query)
     # purpose :generate draws for euromillions
     # query = request.args.get("lt")
+    #print(nb)
     l = list(range(1,51))
     s = list(range(1,13))
     s1 = random.sample(s,7)
     s2 = sorted(random.sample(s,3))
     x = random.sample(l,23)
-    y = sorted(random.sample(x,11))
-    c = [0]+y
+    y =[]
+    for q in range(nb):
+        tmp = [0]+sorted(random.sample(x,11))
+        y.append(tmp)
+    #c = [0]+y
     #z = random.sample(y,7)
+    #print(y)
     cbs = [
     		[ 1 , 2 , 4 , 6 , 9 ],
     		[ 1 , 2 , 4 , 6 , 10 ],
@@ -188,17 +197,23 @@ def eur(c=[0,1,2,3,4,5,6,7,8,9]):
     	]
     l = [0,1,2]
     combs = []
-    for e1,i in enumerate(cbs):
-        p = random.sample(l[:3],2)
-        if (2 in p):
-            c1 = []
-            for j in i:
-                #print(c[j], end='-')
-                c1.append(c[j])
-            combs.append(sorted(c1))
+    for c in y:
+        print(c)
+        for e1,i in enumerate(cbs):
+            p = random.sample(l[:3],2)
+            if (2 in p):
+                c1 = []
+                for j in i:
+                    #print(c[j], end='-')
+                    c1.append(c[j])
+                combs.append(sorted(c1))
+        #combs.append('======================')
     #combs = combs.sort()
     #print(combs)
     return render_template("eur.html", combs = combs, stars = s2, lcombs=len(combs))
+
+# plan an help section
+# with param /help to display all routes and possible parameters
 
 
 def index():
